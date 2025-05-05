@@ -1,0 +1,13 @@
+section {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  section h2 {
+    color: #00796b;
+  }
+  
+  section p {
+    line-height: 1.6;
+  }
