@@ -1,0 +1,26 @@
+# Node.js
+react-frontend/node_modules/
+springboot-backend/node_modules/
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+*.pid
+*.seed
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# dotenv
+react-frontend/.env
+springboot-backend/.env
+
+# IDEs
+.idea/
+.vscode/
+
+# Build
+react-frontend/build/
