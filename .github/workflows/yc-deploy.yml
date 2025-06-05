@@ -1,0 +1,44 @@
+name: Deploy to Yandex Cloud
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./springboot-backend
+          push: true
+          tags: cr.yandex/${{ secrets.YC_REGISTRY_ID }}/clinic-backend:${{ github.sha }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./react-frontend
+          push: true
+          tags: cr.yandex/${{ secrets.YC_REGISTRY_ID }}/clinic-frontend:${{ github.sha }}
+
+      - name: Deploy to Yandex Cloud
+        uses: yc-actions/yc-coi-deploy@v1
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: ${{ secrets.YC_FOLDER_ID }}
+          container-name: clinic
+          service-account-id: ${{ secrets.YC_SA_ID }}
+          docker-compose-path: ./docker-compose.production.yml 
