@@ -49,7 +49,10 @@ public class AuthController {
                     "roles", roles // Отправляем роли на фронтенд
             ));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            return ResponseEntity.status(401).body(Map.of(
+                "error", "Invalid credentials",
+                "message", "Неверный email или пароль"
+            ));
         }
     }
     @PostMapping("/register")
